@@ -1,0 +1,12 @@
+﻿<Alert Color="Color.Success" Visible>
+    <AlertMessage>@Title</AlertMessage>
+    <AlertDescription>@Message</AlertDescription>
+</Alert>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = "Default title";
+
+    [Parameter]
+    public string Message { get; set; } = "Default message";  
+}

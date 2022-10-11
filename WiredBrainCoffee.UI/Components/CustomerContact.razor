@@ -1,0 +1,45 @@
+﻿
+@inject NavigationManager NavManager
+@inject IContactService ContactService
+
+
+<h1>Customer Contact</h1>
+<p>We'd love to hear from you! We try our best to respond within 24 hours.</p>
+<hr />
+
+<EditForm Model="@Contact" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <Microsoft.AspNetCore.Components.Forms.ValidationSummary />
+    <div class="form-group">
+        <label for="name">Name: </label>
+        <InputText id="firstName" class="form-control" @bind-Value="@Contact.Name" placeholder="Enter first name"></InputText>
+        <ValidationMessage For="@(() => Contact.Name)" />
+    </div>
+    <div class="form-group">
+        <label for="email">Email: </label>
+        <InputText id="email" class="form-control" @bind-Value="@Contact.Email" placeholder="Enter email"></InputText>
+        <ValidationMessage For="@(() => Contact.Email)" />
+    </div>
+    <div class="form-group">
+        <label for="email">Phone: </label>
+        <InputText id="phone" class="form-control" @bind-Value="@Contact.Phone" placeholder="Enter phone"></InputText>
+        <ValidationMessage For="@(() => Contact.Phone)" />
+    </div>
+    <div class="form-group">
+        <label for="message">Message: </label>
+        <InputTextArea id="message" class="form-control" @bind-Value="@Contact.Message" placeholder="Enter message"></InputTextArea>
+        <ValidationMessage For="@(() => Contact.Message)" />
+    </div>
+
+    <button type="submit" class="btn btn-info">Submit</button>
+</EditForm>
+
+@code {
+    public Contact Contact = new Contact();
+
+    private async void HandleValidSubmit()
+    {
+        await ContactService.PostContact(Contact);
+        NavManager.NavigateTo("contact-confirmation");
+    }
+}
