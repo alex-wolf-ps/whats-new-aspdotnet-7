@@ -93,13 +93,9 @@ app.MapGet("/order-status", async (IHttpClientFactory factory) =>
 //})
 //.WithName("Delete Order");
 
-app.MapPost("/contact", async (IWebHostEnvironment webHostEnvironment, [FromForm] Contact contact) =>
+app.MapPost("/contact", (Contact contact) =>
 {
     // save contact to database
-    var file = contact.AttachedFiles.FirstOrDefault();
-    // save file to file system
-    var path = $"{webHostEnvironment.ContentRootPath}\\images\\{file.FileName}";
-    await file.CopyToAsync(File.OpenWrite(path));
 });
 
 app.MapGet("/menu", () =>

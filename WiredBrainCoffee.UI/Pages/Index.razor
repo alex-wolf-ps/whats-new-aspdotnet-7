@@ -15,7 +15,7 @@
             <Image Source="images/banner/cups.jpg" />
         </CarouselSlide>
     </Carousel>
-    @code{
+    @code {
         private string selectedSlide = "1";
     }
 </header>
@@ -63,8 +63,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-8">
-            <div class="card">
+        <div class="col-md-8 mb-4">
+            <div class="card mb-4">
                 <div class="row no-gutters">
                     <div class="col-sm-5">
                         <img class="card-img" src="images/download-small.png" alt="">
@@ -88,19 +88,39 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
             <div class="card">
-                <div class="card-body">
-                    <h2>Contact Us</h2>
-                    <img style="width: 75%; margin: 0 auto; display: block;" src="images/placeholder.png" />
-                    <p>Questions or feedback about anything? We'd love to hear from you.</p>
-                </div>
-                <div class="card-footer">
-                    <NavLink href="Contact" class="btn btn-info btn-block">Get Involved</NavLink>
+                <div class="row no-gutters">
+                    <div class="col-sm-6">
+                        <img style="width:100%" src="images/placeholder.png" />
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card-body">
+                            <h2>Contact Us</h2>
+                            <p>Questions or feedback about anything? We'd love to hear from you.</p>
+                            <p>Hours of Operation:</p>
+                            <ul>
+                                <li>Mon-Fri: 6am - 9pm</li>
+                                <li>Saturday: 7am-9pm</li>
+                                <li>Sunday: 7am-5pm</li>
+                            </ul>
+                            <NavLink href="Contact" class="btn btn-info btn-block">Get Involved</NavLink>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="col-md-4 mb-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2>10% off Specials!</h2>
+                    <p>Fall is here - celebrate with 10% off our signature drinks.</p>
+                    <img src="images/marketing/sign.jpg" class="sign" />
+                </div>
+                <div class="card-footer">
+                    <button @onclick="ApplyPromo" class="btn btn-info btn-block">Apply Promo!</button>
+                </div>
+            </div>
         </div>
+    </div>
     <hr class="mb-5">
 </div>

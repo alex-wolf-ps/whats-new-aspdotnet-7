@@ -11,6 +11,18 @@
         </div>
         <div class="row">
             <div class="col-md-8"> 
+                <div>
+                    <input class="form-control" style="max-width:250px; display:inline-block" placeholder="Search..."
+                        @bind="SearchTerm" @bind:event="oninput" /> 
+                        <button @onclick="FilterMenu" class="btn btn-info">Search</button>
+                    <hr />
+                    @foreach(var item in FilteredMenu)
+                    {
+                        <MenuListItem MenuItem="item" OnClickCallback="(e => AddExtras(item))" />
+                    }
+                </div>
+                @if (FilteredMenu.Count() == 0)
+                {
                 <Tabs FullWidth SelectedTab="@(ActiveTab != null ? ActiveTab : "coffee")" SelectedTabChanged="@OnSelectedTabChanged">
                     <Items>
                         <Tab Name="coffee">Coffee</Tab>
@@ -18,34 +30,36 @@
                     </Items>
                     <Content>
                         <TabPanel Name="coffee">
-                            @foreach (var item in CoffeeMenuItems)
+                            @foreach (var item in MenuItems.Where(x => x.Category == "Coffee"))
                             {
                                 <MenuListItem MenuItem="item" OnClickCallback="(e => AddExtras(item))" />
                             }
                         </TabPanel>
                         <TabPanel Name="food">
-                            @foreach (var item in FoodMenuItems)
+                            @foreach (var item in MenuItems.Where(x => x.Category == "Food"))
                             {
                                 <MenuListItem MenuItem="item" OnClickCallback="(e => AddToOrder(item))" />
                             }
                         </TabPanel>
                     </Content>
-                </Tabs> 
+                    </Tabs>
+                }
             </div>
             <div class="col-md-4">
                 <div class="order-info">
-                    <h3>Order with state:</h3>
+                    <h3>Order Summary:</h3>
                     @foreach (var item in CurrentOrder)
                     {
                         <OrderListItem MenuItem="item" OnClickCallback="(e => RemoveFromOrder(item))" />
                     }
                     <div class="place-order">
+                        <p class="sub-line"><span>Promo savings: @((Discount * OrderTotal).ToString("C"))</span></p>
+                        <p class="sub-line"><span>Tax: @((SalesTax * OrderTotal).ToString("C"))</span></p>
                         <p class="sub-line"><span>Your Total:</span><span>@((OrderTotal + (SalesTax * OrderTotal)).ToString("C"))</span></p>
                         <hr />
                         <div class="form-group">
                             <p>Gift cards or coupons? Enter them here.</p>
                             <input @bind-value="PromoCode" type="text" placeholder="Enter promo code" class="form-control" />
-                            <p hidden="@IsValidPromoCode">Sorry, invalid code.</p>
                         </div>
                         <Button @onclick="PlaceOrder" Color="Color.Info" class="float-right">Place Order</Button>
                     </div> 

@@ -19,16 +19,31 @@ namespace WiredBrainCoffee.UI.Pages
         public IModalService Modal { get; set; }
 
         public List<MenuItem> CurrentOrder { get; set; } = new List<MenuItem>();
-        public List<MenuItem> FoodMenuItems { get; set; } = new List<MenuItem>();
-        public List<MenuItem> CoffeeMenuItems { get; set; } = new List<MenuItem>();
+        public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
         public decimal OrderTotal { get; set; } = 0;
         public decimal SalesTax { get; set; } = 0.06m;
-        public string PromoCode { get; set; } = "";
-        public bool IsValidPromoCode { get; set; } = true;
+        public string PromoCode { get; set; } = String.Empty;
+        public decimal Discount { get; set; } = 0;
+
+        public string SearchTerm { get; set; } = String.Empty;
+        public List<MenuItem> FilteredMenu = new();
 
         [Parameter]
         [SupplyParameterFromQuery]
         public string ActiveTab { get; set; }
+
+        public void FilterMenu()
+        {
+            if (!string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                FilteredMenu = MenuItems
+                .Where(x => x.Name.ToLower().Contains(SearchTerm.ToLower())).ToList();
+            } 
+            else
+            {
+                FilteredMenu = new();
+            }
+        }
 
         private Task OnSelectedTabChanged(string name)
         {
@@ -75,10 +90,12 @@ namespace WiredBrainCoffee.UI.Pages
 
         protected async override Task OnInitializedAsync()
         {
-            var menuItems = await MenuService.GetMenuItems();
-            
-            FoodMenuItems = menuItems.Where(x => x.Category == "Food").ToList();
-            CoffeeMenuItems = menuItems.Where(x => x.Category == "Coffee").ToList();
+            MenuItems = await MenuService.GetMenuItems();
+            PromoCode = NavManager.HistoryEntryState;
+            if (PromoCode == "WiredFall")
+            {
+                Discount = 0.1m;
+            }
         }
     }
 }

@@ -22,14 +22,9 @@ body {
     width: 100%;
 }
 
-/*.carousel-item {
-    max-height: 400px;
-
-}
-
 .carousel-item img {
-    margin-top: -100px;
-}*/
+    width: 100%;
+}
 
 #qrCode {
     margin: 15px;
@@ -72,17 +67,20 @@ body {
 
 .bg-design {
     background-image: url("../images/marketing/design.jpg");
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .bg-carbs {
     background-image: url("../images/marketing/carbs.jpg");
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .bg-table {
     background-image: url("../images/marketing/community.jpg");
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .card-title a {
@@ -251,6 +249,10 @@ input[type="radio"] {
 
 #alertContainer {
     font-size: 1.5em;
+}
+
+.sign {
+    max-width: 100%;
 }
 
 /*
