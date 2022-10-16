@@ -4,11 +4,11 @@ using WiredBrainCoffee.MinApi;
 using WiredBrainCoffee.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("Orders") ?? "Data Source=Orders.db";
+//var connectionString = builder.Configuration.GetConnectionString("Orders") ?? "Data Source=Orders.db";
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 //builder.Services.AddSqlite<OrderDbContext>(connectionString);
 //const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -46,25 +46,25 @@ app.MapGet("/order-status", async (IHttpClientFactory factory) =>
 })
 .WithName("Get system status");
 
-//app.MapGet("/orders/{id}", (int id, IOrderService orderService) =>
-//{
-//    var order = orderService.GetOrderById(id);
+app.MapGet("/orders/{id}", (int id, IOrderService orderService) =>
+{
+    var order = orderService.GetOrderById(id);
 
-//    if (order == null)
-//    {
-//        return Results.NotFound();
-//    }
+    if (order == null)
+    {
+        return Results.NotFound();
+    }
 
-//    return Results.Ok(order);
-//})
-//.WithName("Get order by id");
+    return Results.Ok(order);
+})
+.WithName("Get order by id");
 
 
-//app.MapGet("/orders", (IOrderService orderService) =>
-//{
-//    return Results.Ok(orderService.GetOrders());
-//})
-//.WithName("Get orders");
+app.MapGet("/orders", (IOrderService orderService) =>
+{
+    return Results.Ok(orderService.GetOrders());
+})
+.WithName("Get orders");
 
 
 //app.MapPost("/orders", (Order newOrder, IOrderService orderService) =>
@@ -337,7 +337,7 @@ app.MapGet("/menu", () =>
                 new MenuItem()
                 {
                     Id = 3,
-                    Name = "Cappucino",
+                    Name = "Cappuccino",
                     ShortDescription = "Rich and foamy, its the perfect comfort-coffee.",
                     Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.",
                     ImageFile = "images/menu/cup.jpg",

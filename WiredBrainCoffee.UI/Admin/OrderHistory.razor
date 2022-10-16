@@ -1,15 +1,30 @@
 ﻿@namespace WiredBrainCoffee.UI.Admin
-@inject IOrderService OrderService
 @inject HttpClient Http
  
 <div>
     <h2>Order History</h2>
     <hr />
     <div class="order-history">
-        <p>This area is under construction.</p>
+        <div class="grid">
+            <QuickGrid Items="@FilteredItems" ResizableColumns="true" Pagination="@pagination">
+                <PropertyColumn Property="@(c => c.OrderNumber)" Title="Order Number" Sortable="true">
+                </PropertyColumn>
+                <PropertyColumn Property="@(c => c.LastName)" Title="Last Name" Sortable="true">
+                    <ColumnOptions>
+                        <div class="search-box">
+                            <input type="search" autofocus @bind="nameFilter" @bind:event="oninput" placeholder="Last name..." />
+                        </div>
+                    </ColumnOptions>
+                </PropertyColumn>
+                <PropertyColumn Property="@(c => c.FirstName)" Title="First Name" Sortable="true" />
+                <PropertyColumn Property="@(c => c.Notes)" Title="Notes" Sortable="true" />
+                <PropertyColumn Property="@(c => c.Total)" Sortable="true" />
+                <PropertyColumn Property="@(c => c.Created)" Sortable="true" />
+                <PropertyColumn Property="@(c => c.PromoCode)" Title="Promo Code" Sortable="true" />
+                <PropertyColumn Property="@(c => c.Items.Count)" Title="Item Count" Sortable="true" />
+            </QuickGrid>
+        </div>
+
+        <Paginator Value="@pagination" />
     </div>
 </div>
-
-@code {
-    
-}

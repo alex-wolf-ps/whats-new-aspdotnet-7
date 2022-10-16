@@ -1,7 +1,7 @@
 ﻿
 @inject NavigationManager NavManager
 @inject IContactService ContactService
-
+@inject IJSRuntime JSRun
 
 <h1>Customer Contact</h1>
 <p>We'd love to hear from you! We try our best to respond within 24 hours.</p>
@@ -30,12 +30,31 @@
         <InputTextArea id="message" class="form-control" @bind-Value="@Contact.Message" placeholder="Enter message"></InputTextArea>
         <ValidationMessage For="@(() => Contact.Message)" />
     </div>
+    <a href="www.google.com">Read our terms</a>
 
     <button type="submit" class="btn btn-info">Submit</button>
 </EditForm>
+<NavigationLock OnBeforeInternalNavigation="ConfirmNavigation" ConfirmExternalNavigation />
 
 @code {
     public Contact Contact = new Contact();
+
+    async Task ConfirmNavigation(LocationChangingContext context)
+    {
+        bool isEditing = Contact.GetType().GetProperties()
+                            .Any(p => p.GetValue(Contact) != null);
+
+        if (isEditing)
+        {
+            var confirm = await JSRun.InvokeAsync<bool>
+                ("window.confirm", "Are you sure you want to leave?");
+
+            if (!confirm)
+            {
+                context.PreventNavigation();
+            }
+        }
+    }
 
     private async void HandleValidSubmit()
     {
