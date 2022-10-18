@@ -235,6 +235,10 @@ input[type="radio"] {
     height: 50px;
 }
 
+.order-history table {
+    width: 100%;
+}
+
 .nav-item {
     cursor: pointer;
 }
