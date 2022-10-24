@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.RateLimiting;
 using WiredBrainCoffee.MinApi;
 using WiredBrainCoffee.Models;
 
@@ -22,8 +24,24 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 //});
 builder.Services.AddCors();
 builder.Services.AddHttpClient();
+builder.Services.AddOutputCache();
 
 var app = builder.Build();
+app.UseOutputCache();
+
+app.UseRateLimiter(new RateLimiterOptions() { RejectionStatusCode = 429 }
+    .AddConcurrencyLimiter("ConcurrencyLimiter", options =>
+    {
+        options.PermitLimit = 1;
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    })
+    .AddFixedWindowLimiter("FixedWindow", options =>
+    {
+        options.Window = TimeSpan.FromSeconds(5);
+        options.PermitLimit = 10;
+        options.QueueLimit = 3;
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    }));
 
 //await CreateDb(app.Services, app.Logger);
 
@@ -36,6 +54,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+app.MapGet("/unlimited", () => 
+{
+    return DateTime.Now.ToString();
+}).CacheOutput(p => p.Expire(TimeSpan.FromSeconds(5)));
+
+app.MapGet("/ratelimited", () =>
+{
+    return "Limited.";
+}).RequireRateLimiting("FixedWindow");
 
 app.MapGet("/order-status", async (IHttpClientFactory factory) =>
 {
@@ -64,7 +92,17 @@ app.MapGet("/orders", (IOrderService orderService) =>
 {
     return Results.Ok(orderService.GetOrders());
 })
-.WithName("Get orders");
+.AddEndpointFilter(async (context, next) =>
+{
+    Console.WriteLine("Runs before /orders endpoint");
+
+    // Endpoint runs
+    var result = await next(context);
+
+    Console.WriteLine("Runs after /orders endpoint");
+
+    return result;
+});
 
 
 //app.MapPost("/orders", (Order newOrder, IOrderService orderService) =>
@@ -95,7 +133,7 @@ app.MapGet("/orders", (IOrderService orderService) =>
 
 app.MapPost("/contact", (Contact contact) =>
 {
-    // save contact to database
+    // saxve contact to database
 });
 
 app.MapGet("/menu", () =>
@@ -345,7 +383,7 @@ app.MapGet("/menu", () =>
                     Category = "Coffee"
                 }
             };
-});
+}); ;
 
 app.Run();
 
