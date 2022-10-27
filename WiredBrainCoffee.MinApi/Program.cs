@@ -2,26 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
+using Microsoft.Extensions.Primitives;
+using Microsoft.OpenApi.Models;
+using System.Diagnostics;
 using WiredBrainCoffee.MinApi;
 using WiredBrainCoffee.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-//var connectionString = builder.Configuration.GetConnectionString("Orders") ?? "Data Source=Orders.db";
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IOrderService, OrderService>();
-//builder.Services.AddSqlite<OrderDbContext>(connectionString);
-//const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: MyAllowSpecificOrigins,
-//                      builder =>
-//                      {
-//                          builder.AllowAnyOrigin();
-//                      });
-//});
 builder.Services.AddCors();
 builder.Services.AddHttpClient();
 builder.Services.AddOutputCache();
@@ -43,8 +35,6 @@ app.UseRateLimiter(new RateLimiterOptions() { RejectionStatusCode = 429 }
         options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
     }));
 
-//await CreateDb(app.Services, app.Logger);
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -65,28 +55,21 @@ app.MapGet("/ratelimited", () =>
     return "Limited.";
 }).RequireRateLimiting("FixedWindow");
 
-app.MapGet("/order-status", async (IHttpClientFactory factory) =>
+var mobileAPI = app.MapGroup("/api").AddEndpointFilter(async (context, next) =>
 {
-    var client = factory.CreateClient();
-    var response = await client.GetFromJsonAsync<OrderSystemStatus>("https://wiredbraincoffee.azurewebsites.net/api/OrderSystemStatus");
-
-    return Results.Ok(response);
-})
-.WithName("Get system status");
-
-app.MapGet("/orders/{id}", (int id, IOrderService orderService) =>
-{
-    var order = orderService.GetOrderById(id);
-
-    if (order == null)
+    StringValues deviceType;
+    context.HttpContext.Request.Headers.TryGetValue("x-device-type", out deviceType);
+    if (deviceType != "mobile")
     {
-        return Results.NotFound();
+        return Results.BadRequest();
     }
 
-    return Results.Ok(order);
-})
-.WithName("Get order by id");
+    var result = await next(context);
 
+    Debug.WriteLine("after");
+
+    return result;
+});
 
 app.MapGet("/orders", (IOrderService orderService) =>
 {
@@ -104,32 +87,12 @@ app.MapGet("/orders", (IOrderService orderService) =>
     return result;
 });
 
+app.MapGet("/ordersById", (IOrderService orderService, int[] orderIds) =>
+{
+    return Results.Ok(orderService.GetOrders().Where(x => orderIds.Contains(x.Id)));
+})
+.WithOpenApi();
 
-//app.MapPost("/orders", (Order newOrder, IOrderService orderService) =>
-//{
-//    var createdOrder = orderService.AddOrder(newOrder);
-
-//    return Results.Created($"/orders/{createdOrder.Id}", createdOrder);
-//})
-//.WithName("Create order");
-
-
-//app.MapPut("/orders/{id}", (int id, Order updatedOrder, IOrderService orderService) =>
-//{
-//    orderService.UpdateOrder(id, updatedOrder);
-
-//    return Results.NoContent();
-//})
-//.WithName("Update Order");
-
-
-//app.MapDelete("/orders/{id}", (int id, IOrderService orderService) =>
-//{
-//    orderService.DeleteOrder(id);
-
-//    return Results.Ok();
-//})
-//.WithName("Delete Order");
 
 app.MapPost("/contact", (Contact contact) =>
 {
@@ -385,11 +348,16 @@ app.MapGet("/menu", () =>
             };
 }); ;
 
-app.Run();
-
-async Task CreateDb(IServiceProvider services, ILogger logger)
+mobileAPI.MapGet("/rewards", () =>
 {
-    using var db = services.CreateScope().ServiceProvider.GetRequiredService<OrderDbContext>();
-    await db.Database.MigrateAsync();
-}
+    return "SecretDiscount!";
+});
 
+mobileAPI.MapPost("/survey", ([AsParameters]SurveyResults results) =>
+{
+    // Log survey results
+
+    return "Thank you!";
+});
+
+app.Run();
