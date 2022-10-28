@@ -10,18 +10,17 @@ namespace WiredBrainCoffee.Models
 {
     public class Contact
     {
-        public string PartnerId { get; set; }
-
+        [Required]
         public string Name { get; set; }
 
         public string Phone { get; set; }
 
+        [Required]
         public string Email { get; set; }
 
+        [Required]
         public string Message { get; set; }
 
         public DateTime SubmittedTime { get; set; }
-
-        public List<IFormFile> AttachedFiles { get; set; } = new List<IFormFile>();
     }
 }

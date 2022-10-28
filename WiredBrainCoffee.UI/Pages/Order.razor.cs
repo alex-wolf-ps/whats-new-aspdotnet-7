@@ -84,7 +84,7 @@ namespace WiredBrainCoffee.UI.Pages
             OrderTotal -= item.Price;
         }
 
-        private async Task PlaceOrder()
+        private void PlaceOrder()
         {
             NavManager.NavigateTo("order-confirmation");
         }
