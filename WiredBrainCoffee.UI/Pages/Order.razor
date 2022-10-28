@@ -32,13 +32,17 @@
                         <TabPanel Name="coffee">
                             @foreach (var item in MenuItems.Where(x => x.Category == "Coffee"))
                             {
-                                <MenuListItem MenuItem="item" OnClickCallback="(e => AddExtras(item))" />
+                                    <MenuListItem MenuItem="item" 
+                                        OnDetailsCallback="(e => ViewDetails(item))"
+                                        OnOrderCallback="(e => AddExtras(item))" />
                             }
                         </TabPanel>
                         <TabPanel Name="food">
                             @foreach (var item in MenuItems.Where(x => x.Category == "Food"))
                             {
-                                <MenuListItem MenuItem="item" OnClickCallback="(e => AddToOrder(item))" />
+                                    <MenuListItem MenuItem="item"
+                                          OnDetailsCallback="(e => ViewDetails(item))" 
+                                          OnOrderCallback="(e => AddToOrder(item))" />
                             }
                         </TabPanel>
                     </Content>

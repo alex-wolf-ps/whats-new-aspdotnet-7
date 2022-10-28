@@ -1,0 +1,23 @@
+﻿<div>
+    <div class="card mb-3">
+        <img src="@ImageFile" />
+        <div class="card-body">
+            <h5 class="card-title">@Name</h5>
+            <p class="card-text">@Description</p>
+            <p class="card-text"><small class="text-muted">Price: @Price</small></p>
+        </div>
+    </div>
+
+    <button class="btn btn-success" @onclick="Close">Close</button>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    [Parameter] public string Name { get; set; }
+    [Parameter] public string Description { get; set; }
+    [Parameter] public string Price { get; set; }
+    [Parameter] public string ImageFile { get; set; }
+
+    private async Task Close() => await BlazoredModal.CloseAsync();
+}

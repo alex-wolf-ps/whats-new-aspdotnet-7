@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 using WiredBrainCoffee.Models;
 using WiredBrainCoffee.UI.Services;
 using WiredBrainCoffee.UI.Components;
+using Blazored.Modal;
 
 namespace WiredBrainCoffee.UI.Pages
 {
@@ -50,6 +51,17 @@ namespace WiredBrainCoffee.UI.Pages
         {
             ActiveTab = name;
             return Task.CompletedTask;
+        }
+
+        void ViewDetails(MenuItem item)
+        {
+            var parameters = new ModalParameters()
+                .Add(nameof(item.Name), item.Name)
+                .Add(nameof(item.Description), item.Description)
+                .Add(nameof(item.ImageFile), item.ImageFile)
+                .Add(nameof(item.Price), item.Price.ToString("c"));
+
+            Modal.Show<DetailsModal>("Details", parameters);
         }
 
         async Task AddExtras(MenuItem item)
