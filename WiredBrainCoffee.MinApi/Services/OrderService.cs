@@ -1,6 +1,7 @@
-﻿using WiredBrainCoffee.Models;
+﻿using WiredBrainCoffee.MinApi.Services.Interfaces;
+using WiredBrainCoffee.Models;
 
-namespace WiredBrainCoffee.MinApi
+namespace WiredBrainCoffee.MinApi.Services
 {
     public class OrderService : IOrderService
     {
@@ -207,7 +208,7 @@ namespace WiredBrainCoffee.MinApi
                             ImageFile = "images/menu/design.jpg",
                             Price = 6.5M,
                             Category = "Coffee"
-                        }       
+                        }
                     }
                 }
             };
@@ -244,14 +245,5 @@ namespace WiredBrainCoffee.MinApi
             var order = Orders.FirstOrDefault(x => x.Id == id);
             Orders.Remove(order);
         }
-    }
-
-    public interface IOrderService
-    {
-        Order AddOrder(Order order);
-        void DeleteOrder(int id);
-        Order GetOrderById(int id);
-        List<Order> GetOrders();
-        void UpdateOrder(int id, Order newOrder);
     }
 }

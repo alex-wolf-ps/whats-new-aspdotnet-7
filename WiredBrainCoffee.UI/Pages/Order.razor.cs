@@ -22,15 +22,16 @@ namespace WiredBrainCoffee.UI.Pages
         public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
         public decimal OrderTotal { get; set; } = 0;
         public decimal SalesTax { get; set; } = 0.06m;
-        public string PromoCode { get; set; } = String.Empty;
+        public string PromoCode { get; set; } = string.Empty;
         public decimal Discount { get; set; } = 0;
-
-        public string SearchTerm { get; set; } = String.Empty;
-        public List<MenuItem> FilteredMenu = new();
 
         [Parameter]
         [SupplyParameterFromQuery]
         public string ActiveTab { get; set; }
+
+        public string SearchTerm { get; set; } = string.Empty;
+
+        public List<MenuItem> FilteredMenu = new();
 
         public void FilterMenu()
         {
@@ -91,11 +92,6 @@ namespace WiredBrainCoffee.UI.Pages
         protected async override Task OnInitializedAsync()
         {
             MenuItems = await MenuService.GetMenuItems();
-            PromoCode = NavManager.HistoryEntryState;
-            if (PromoCode == "WiredFall")
-            {
-                Discount = 0.1m;
-            }
         }
     }
 }

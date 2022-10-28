@@ -13,7 +13,7 @@
             <div class="col-md-8"> 
                 <div>
                     <input class="form-control" style="max-width:250px; display:inline-block" placeholder="Search..."
-                        @bind="SearchTerm" @bind:event="oninput" /> 
+                        @bind="SearchTerm" /> 
                         <button @onclick="FilterMenu" class="btn btn-info">Search</button>
                     <hr />
                     @foreach(var item in FilteredMenu)
