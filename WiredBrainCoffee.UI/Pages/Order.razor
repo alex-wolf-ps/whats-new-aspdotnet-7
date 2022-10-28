@@ -18,7 +18,7 @@
                     <hr />
                     @foreach(var item in FilteredMenu)
                     {
-                        <MenuListItem MenuItem="item" OnClickCallback="(e => AddExtras(item))" />
+                        <MenuListItem MenuItem="item" OnOrderCallback="(e => AddExtras(item))" />
                     }
                 </div>
                 @if (FilteredMenu.Count() == 0)
