@@ -51,8 +51,12 @@ app.MapGet("/orders", (IOrderService orderService) =>
 app.MapGet("/orderById", (IOrderService orderService, int id) =>
 {
     return Results.Ok(orderService.GetOrderById(id));
-})
-.WithOpenApi();
+});
+
+app.MapGet("/ordersByIds", (IOrderService orderService, int[] orderIds) =>
+{
+    return Results.Ok(orderService.GetOrders().Where(x => orderIds.Contains(x.Id)));
+});
 
 app.MapPost("/contact", (Contact contact) =>
 {
