@@ -64,7 +64,13 @@ app.MapGet("/menu", (IMenuService menuService) =>
     return menuService.GetMenuItems();
 });
 
-mobileAPI.MapPost("/survey", (SurveyResults results) =>
+app.MapPost("/upload", async (IFormFile file) =>
+{
+    using var stream = File.OpenWrite("upload.jpg");
+    await file.CopyToAsync(stream);
+});
+
+mobileAPI.MapPost("/survey", ([AsParameters]SurveyResults results) =>
 {
     // Todo: save to db
     return "Thank you!";
