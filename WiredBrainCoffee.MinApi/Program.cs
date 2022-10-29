@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Primitives;
 using System.Diagnostics;
 using System.Threading.RateLimiting;
+using WiredBrainCoffee.MinApi;
 using WiredBrainCoffee.MinApi.Services;
 using WiredBrainCoffee.MinApi.Services.Interfaces;
 using WiredBrainCoffee.Models;
@@ -43,20 +44,9 @@ var mobileAPI = app.MapGroup("/api").AddEndpointFilter(async (context, next) =>
     return result;
 });
 
-app.MapGet("/orders", (IOrderService orderService) =>
-{
-    return Results.Ok(orderService.GetOrders());
-});
-
-app.MapGet("/orderById", (IOrderService orderService, int id) =>
-{
-    return Results.Ok(orderService.GetOrderById(id));
-});
-
-app.MapGet("/ordersByIds", (IOrderService orderService, int[] orderIds) =>
-{
-    return Results.Ok(orderService.GetOrders().Where(x => orderIds.Contains(x.Id)));
-});
+app.MapGet("/orders", OrderEndPoints.GetOrders);
+app.MapGet("/orderById", OrderEndPoints.GetOrderById);
+app.MapGet("/orderById", OrderEndPoints.GetOrdersByIds);
 
 app.MapPost("/contact", (Contact contact) =>
 {
