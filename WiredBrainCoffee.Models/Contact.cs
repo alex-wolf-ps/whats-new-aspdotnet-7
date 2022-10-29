@@ -21,6 +21,5 @@ namespace WiredBrainCoffee.Models
         [Required]
         public string Message { get; set; }
 
-        public DateTime SubmittedTime { get; set; }
     }
 }

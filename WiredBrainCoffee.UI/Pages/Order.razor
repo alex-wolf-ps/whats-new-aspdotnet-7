@@ -14,14 +14,17 @@
                 <div>
                     <input class="form-control" style="max-width:250px; display:inline-block" placeholder="Search..."
                         @bind="SearchTerm" /> 
-                        <button @onclick="FilterMenu" class="btn btn-info">Search</button>
                     <hr />
-                    @foreach(var item in FilteredMenu)
+                    @if (!string.IsNullOrEmpty(SearchTerm) && FilteredMenu.Count() == 0)
+                    {
+                        <p>No results found.</p>
+                    }
+                    @foreach (var item in FilteredMenu)
                     {
                         <MenuListItem MenuItem="item" OnOrderCallback="(e => AddExtras(item))" />
                     }
                 </div>
-                @if (FilteredMenu.Count() == 0)
+                @if (string.IsNullOrEmpty(SearchTerm))
                 {
                 <Tabs FullWidth SelectedTab="@(ActiveTab != null ? ActiveTab : "coffee")" SelectedTabChanged="@OnSelectedTabChanged">
                     <Items>

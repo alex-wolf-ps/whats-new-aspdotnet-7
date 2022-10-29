@@ -3,33 +3,23 @@
     <hr />
     <div class="order-history">
         <div class="grid">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Order #</th>
-                        <th>Last Name</th>
-                        <th>First Name</th>
-                        <th>Notes</th>
-                        <th>Created</th>
-                        <th>Promo Code</th>
-                        <th>Item Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach(var item in items)
-                    {
-                        <tr>
-                            <td>@item.OrderNumber</td>
-                            <td>@item.LastName</td>
-                            <td>@item.FirstName</td>
-                            <td>@item.Notes</td>
-                            <td>@item.Created</td>
-                            <td>@item.PromoCode</td>
-                            <td>@item.Items.Count</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <QuickGrid Items="@FilteredItems" ResizableColumns="true" Pagination="@pagination">
+                <PropertyColumn Property="@(c => c.OrderNumber)" Title="Order #" Sortable="true">
+                </PropertyColumn>
+                <PropertyColumn Property="@(c => c.LastName)" Title="Last Name" Sortable="true">
+                    <ColumnOptions>
+                        <div class="search-box">
+                            <input type="search" autofocus @bind="nameFilter" @bind:event="oninput" placeholder="Last name..." />
+                        </div>
+                    </ColumnOptions>
+                </PropertyColumn>
+                <PropertyColumn Property="@(c => c.FirstName)" Title="First Name" Sortable="true" />
+                <PropertyColumn Property="@(c => c.Notes)" Title="Notes" Sortable="true" />
+                <PropertyColumn Property="@(c => c.Total)" Sortable="true" />
+                <PropertyColumn Property="@(c => c.Created)" Sortable="true" />
+                <PropertyColumn Property="@(c => c.Items.Count)" Title="Items" Sortable="true" />
+            </QuickGrid>
+            <Paginator Value="@pagination" />
         </div>
     </div>
 </div>

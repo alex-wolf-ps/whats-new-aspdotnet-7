@@ -104,6 +104,12 @@ namespace WiredBrainCoffee.UI.Pages
         protected async override Task OnInitializedAsync()
         {
             MenuItems = await MenuService.GetMenuItems();
+
+            PromoCode = NavManager.HistoryEntryState;
+            if (PromoCode == "WiredFall")
+            {
+                Discount = 0.1m;
+            }
         }
     }
 }

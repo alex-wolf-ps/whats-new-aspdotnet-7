@@ -215,3 +215,8 @@ input[type="radio"] {
 .card-actions > * {
     margin: 0 7px;
 }
+
+.grid {
+    background: white;
+    padding: 10px;
+}
