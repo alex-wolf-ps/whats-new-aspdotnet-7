@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WiredBrainCoffee.Models", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WiredBrainCoffee.MinApi", "WiredBrainCoffee.MinApi\WiredBrainCoffee.MinApi.csproj", "{3AB446AC-09DF-466D-8B57-3B3A348A9774}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WiredBrainCoffee.Tests", "WiredBrainCoffee.Tests\WiredBrainCoffee.Tests.csproj", "{0E917478-0642-414B-BDA3-6E9116389A57}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{3AB446AC-09DF-466D-8B57-3B3A348A9774}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AB446AC-09DF-466D-8B57-3B3A348A9774}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AB446AC-09DF-466D-8B57-3B3A348A9774}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E917478-0642-414B-BDA3-6E9116389A57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E917478-0642-414B-BDA3-6E9116389A57}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E917478-0642-414B-BDA3-6E9116389A57}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E917478-0642-414B-BDA3-6E9116389A57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
