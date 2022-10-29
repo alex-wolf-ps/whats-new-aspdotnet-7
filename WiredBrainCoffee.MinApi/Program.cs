@@ -27,6 +27,22 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
+var mobileAPI = app.MapGroup("/api").AddEndpointFilter(async (context, next) =>
+{
+    StringValues deviceType;
+    context.HttpContext.Request.Headers.TryGetValue("x-device-type", out deviceType);
+    if (deviceType != "mobile")
+    {
+        return Results.BadRequest();
+    }
+
+    var result = await next(context);
+
+    Debug.WriteLine("after");
+
+    return result;
+});
+
 app.MapGet("/orders", (IOrderService orderService) =>
 {
     return Results.Ok(orderService.GetOrders());
@@ -48,9 +64,15 @@ app.MapGet("/menu", (IMenuService menuService) =>
     return menuService.GetMenuItems();
 });
 
-app.MapGet("/rewards", () =>
+mobileAPI.MapPost("/survey", (SurveyResults results) =>
 {
-    return "secret discount";
-})
+    // Todo: save to db
+    return "Thank you!";
+});
+
+mobileAPI.MapGet("/rewards", () =>
+{
+    return "SecretDiscount!";
+});
 
 app.Run();
