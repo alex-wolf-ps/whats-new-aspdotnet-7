@@ -32,12 +32,11 @@ app.MapGet("/orders", (IOrderService orderService) =>
     return Results.Ok(orderService.GetOrders());
 });
 
-app.MapGet("/ordersById", (IOrderService orderService, int[] orderIds) =>
+app.MapGet("/orderById", (IOrderService orderService, int id) =>
 {
-    return Results.Ok(orderService.GetOrders().Where(x => orderIds.Contains(x.Id)));
+    return Results.Ok(orderService.GetOrderById(id));
 })
 .WithOpenApi();
-
 
 app.MapPost("/contact", (Contact contact) =>
 {
@@ -47,6 +46,11 @@ app.MapPost("/contact", (Contact contact) =>
 app.MapGet("/menu", (IMenuService menuService) =>
 {
     return menuService.GetMenuItems();
-}); ;
+});
+
+app.MapGet("/rewards", () =>
+{
+    return "secret discount";
+})
 
 app.Run();
