@@ -13,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddOutputCache();
 
 builder.Services.AddCors();
 
@@ -27,6 +28,30 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+app.UseRateLimiter(new RateLimiterOptions() { RejectionStatusCode = 429 }
+    .AddConcurrencyLimiter("Concurrency", options =>
+    {
+        options.PermitLimit = 1;
+    })
+    .AddFixedWindowLimiter("FixedWindow", options =>
+    {
+        options.Window = TimeSpan.FromSeconds(5);
+        options.PermitLimit = 15;
+        options.QueueLimit = 3;
+    }));
+
+app.UseOutputCache();
+
+app.MapGet("Limited", () =>
+{
+    return "This is limited";
+}).RequireRateLimiting("FixedWindow");
+
+app.MapGet("Unlimited", () =>
+{
+    return "This is unlimited.";
+});
 
 var mobileAPI = app.MapGroup("/api").AddEndpointFilter(async (context, next) =>
 {
@@ -56,6 +81,10 @@ app.MapPost("/contact", (Contact contact) =>
 app.MapGet("/menu", (IMenuService menuService) =>
 {
     return menuService.GetMenuItems();
+})
+.CacheOutput(x => 
+{ 
+    x.Expire(TimeSpan.FromSeconds(10));
 });
 
 app.MapPost("/upload", async (IFormFile file) =>
