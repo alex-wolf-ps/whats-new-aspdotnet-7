@@ -3,8 +3,8 @@
 
 <div class="simple-form extras">
     <EditForm Model="Extras">
-        <div class="form-group">
-            <label for="milk">Add Milk</label>
+        <div class="mb-3">
+            <label class="form-label" for="milk">Add Milk</label>
             <InputSelect class="form-control" @bind-Value="Extras.Milk">
                 <option selected value="None">None</option>
                 <option value="Low Fat">Low Fat</option>
@@ -12,8 +12,8 @@
                 <option value="Whole">Whole Milk</option>
             </InputSelect>
         </div>
-        <div class="form-group">
-            <label for="creamer">Add Creamer</label>
+        <div class="mb-3">
+            <label class="form-label" for="creamer">Add Creamer</label>
             <InputSelect class="form-control" @bind-Value="Extras.Creamer">
                 <option selected value="None">None</option>
                 <option value="Light">Light</option>
@@ -21,8 +21,8 @@
                 <option value="Heavy">Heavy</option>
             </InputSelect>
         </div>
-        <div class="form-group">
-            <label for="flavor">Add Flavor</label>
+        <div class="mb-3">
+            <label class="form-label" for="flavor">Add Flavor</label>
             <InputSelect class="form-control" @bind-Value="Extras.Flavor">
                 <option selected value="None">None</option>
                 <option value="Mocha">Mocha</option>
@@ -30,8 +30,8 @@
                 <option value="Caramel">Caramel</option>
             </InputSelect>
         </div>
-        <div class="form-group">
-            <label for="toppings">Add Toppings</label>
+        <div class="mb-3">
+            <label class="form-label" for="toppings">Add Toppings</label>
             <InputSelect class="form-control" @bind-Value="Extras.Topping">
                 <option selected value="None">None</option>
                 <option value="Whipped Cream">Whipped Cream</option>
@@ -39,13 +39,13 @@
                 <option value="Peppermint Flakes">Peppermint Flakes</option>
             </InputSelect>
         </div>
-        <div class="form-group">
-            <label for="first-name">Notes</label>
+        <div class="mb-3">
+            <label class="form-label" for="first-name">Notes</label>
             <InputTextArea @bind-Value="Extras.Notes" class="form-control" Placeholder="Enter notes for your barista here." />
         </div>
     </EditForm>
     <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
-    <button @onclick="SubmitForm" class="btn btn-success float-right">Okay</button>
+    <button @onclick="SubmitForm" class="btn btn-success float-end">Okay</button>
 </div>
 
 @code {

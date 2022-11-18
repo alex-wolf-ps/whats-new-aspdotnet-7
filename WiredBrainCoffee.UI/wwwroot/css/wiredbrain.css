@@ -1,6 +1,5 @@
 body {
-    padding-top: 54px;
-    background-color: #F1EFEE !important;
+    background-color: #ffff !important;
     padding-bottom: 0px;
     font-family: "Arial";
     color: #505050
@@ -27,12 +26,6 @@ body {
 @media screen and (max-width: 767px) {
     .carousel-caption {
         display: none;
-    }
-}
-
-@media (min-width: 992px) {
-    body {
-        padding-top: 56px;
     }
 }
 
@@ -139,7 +132,7 @@ a, .btn-link {
 }
 
 .order-info {
-    margin: 50px 0;
+    margin: 75px 0 0 0;
 }
 
 .order-item {
@@ -188,13 +181,27 @@ input[type="radio"] {
     width: 100%;
 }
 
+.navbar-brand .nav-link, .navbar-brand .nav-link:hover {
+    border-radius: 0;
+    color: #aaa;
+}
+
+.nav-tabs .nav-link, .nav-tabs .nav-link:hover {
+    border-radius: 0;
+    color: #757575 !important;
+}
+
 .nav-item {
     cursor: pointer;
 }
 
-.nav-tabs .nav-item:hover {
-    background-color: #ddd;
+.nav-tabs {
+    border-radius: 0;
 }
+
+    .nav-tabs .nav-item:hover {
+        background-color: #eee;
+    }
 
 .page-wrapper {
     min-height: 1000px;
@@ -214,4 +221,50 @@ input[type="radio"] {
 
 .card-actions > * {
     margin: 0 7px;
+}
+
+.card {
+    border-radius: 0px;
+    border: 1px solid #eee !important;
+}
+
+.tab-content .card-info {
+    min-height: 175px
+}
+
+input {
+    border-radius: 0px !important;
+}
+
+.btn {
+    border-radius: 0 !important;
+    border: none;
+    color: white;
+}
+
+.btn-success, .btn-info {
+    background-color: #C0997F !important;
+}
+
+.btn-light {
+    background-color: #DCB499 !important;
+}
+
+.btn-success:hover, .btn-info:hover, .btn-light:hover {
+    color: white;
+    background-color: #F9CFB4 !important;
+}
+
+.tab-content {
+    background: #fff !important;
+    margin-top: 25px;
+}
+
+.list-group .active {
+    background-color: #C0997F;
+    border: none;
+}
+
+.list-group {
+    border-radius: 0;
 }

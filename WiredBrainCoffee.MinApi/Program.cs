@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Primitives;
-using System.Diagnostics;
-using System.Threading.RateLimiting;
 using WiredBrainCoffee.MinApi.Services;
 using WiredBrainCoffee.MinApi.Services.Interfaces;
 using WiredBrainCoffee.Models;
@@ -32,12 +28,10 @@ app.MapGet("/orders", (IOrderService orderService) =>
     return Results.Ok(orderService.GetOrders());
 });
 
-app.MapGet("/ordersById", (IOrderService orderService, int[] orderIds) =>
+app.MapGet("/orderById", (IOrderService orderService, int id) =>
 {
-    return Results.Ok(orderService.GetOrders().Where(x => orderIds.Contains(x.Id)));
-})
-.WithOpenApi();
-
+    return Results.Ok(orderService.GetOrderById(id));
+});
 
 app.MapPost("/contact", (Contact contact) =>
 {
