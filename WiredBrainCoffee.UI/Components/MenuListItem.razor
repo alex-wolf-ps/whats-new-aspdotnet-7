@@ -1,22 +1,22 @@
 ﻿@namespace WiredBrainCoffee.UI.Components
 @using WiredBrainCoffee.Models
 
-@*<div class="menu-item">
-    <div class="menu-item-image">
-        <img src="@MenuItem.ImageFile" />
+<div class="card">
+    <img src="@MenuItem.ImageFile" />
+    <div class="card-body card-info">
+        <h5 class="card-title">@MenuItem.Name</h5>
+        <p class="card-text">@MenuItem.ShortDescription</p>
     </div>
-    <div class="menu-item-info">
-        <p class="menu-item-title"><b>@MenuItem.Name</b></p>
-        <p class="menu-item-summary">@MenuItem.ShortDescription</p>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Price: @MenuItem.Price.ToString("C")</li>
+        </ul>
+    <div class="card-body">
+        <Button @onclick="(() => OnDetailsCallback.InvokeAsync(MenuItem))" Color="Color.Light">Details</Button>
+        <Button @onclick="(() => OnOrderCallback.InvokeAsync(MenuItem))" class="float-end" Color="Color.Success">Add</Button>
     </div>
-    <div class="menu-item-actions">
-        <span class="menu-item-price"><b>Price: @MenuItem.Price.ToString("C")</b></span>
-        <Button class="float-right" @onclick="(() => OnDetailsCallback.InvokeAsync(MenuItem))" Color="Color.Light">Details</Button>
-        <Button class="float-right" @onclick="(() => OnOrderCallback.InvokeAsync(MenuItem))" Color="Color.Success">Add to Order</Button>
-    </div>
-</div>*@
+</div>
 
-<div class="card menu-item-card">
+@*<div class="card menu-item-card">
   <div class="row g-0">
     <div class="col-md-4">
             <img src="@MenuItem.ImageFile" />
@@ -34,7 +34,7 @@
       </div>
     </div>
   </div>
-</div>
+</div>*@
 
 
 @code {

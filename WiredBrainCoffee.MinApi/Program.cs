@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Primitives;
+using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using System.Threading.RateLimiting;
 using WiredBrainCoffee.MinApi;
@@ -13,9 +14,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddOutputCache();
 
 builder.Services.AddCors();
+builder.Services.AddOutputCache();
 
 var app = builder.Build();
 
@@ -25,6 +26,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseOutputCache();
 
 app.UseHttpsRedirection();
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -37,21 +40,18 @@ app.UseRateLimiter(new RateLimiterOptions() { RejectionStatusCode = 429 }
     .AddFixedWindowLimiter("FixedWindow", options =>
     {
         options.Window = TimeSpan.FromSeconds(5);
-        options.PermitLimit = 15;
+        options.PermitLimit = 10;
         options.QueueLimit = 3;
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
     }));
 
-app.UseOutputCache();
-
-app.MapGet("Limited", () =>
-{
-    return "This is limited";
-}).RequireRateLimiting("FixedWindow");
-
-app.MapGet("Unlimited", () =>
-{
-    return "This is unlimited.";
+app.MapGet("/unlimited", () => {
+    return "Unlimited.";
 });
+
+app.MapGet("/limited", () => {
+    return "Rate limited.";
+}).RequireRateLimiting("FixedWindow");
 
 var mobileAPI = app.MapGroup("/api").AddEndpointFilter(async (context, next) =>
 {
@@ -71,7 +71,7 @@ var mobileAPI = app.MapGroup("/api").AddEndpointFilter(async (context, next) =>
 
 app.MapGet("/orders", OrderEndPoints.GetOrders);
 app.MapGet("/orderById", OrderEndPoints.GetOrderById);
-app.MapGet("/orderById", OrderEndPoints.GetOrdersByIds);
+app.MapGet("/ordersByIds", OrderEndPoints.GetOrdersByIds);
 
 app.MapPost("/contact", (Contact contact) =>
 {
@@ -81,11 +81,7 @@ app.MapPost("/contact", (Contact contact) =>
 app.MapGet("/menu", (IMenuService menuService) =>
 {
     return menuService.GetMenuItems();
-})
-.CacheOutput(x => 
-{ 
-    x.Expire(TimeSpan.FromSeconds(10));
-});
+}).CacheOutput(x => x.Expire(TimeSpan.FromSeconds(10)));
 
 app.MapPost("/upload", async (IFormFile file) =>
 {
@@ -93,15 +89,14 @@ app.MapPost("/upload", async (IFormFile file) =>
     await file.CopyToAsync(stream);
 });
 
-mobileAPI.MapPost("/survey", ([AsParameters]SurveyResults results) =>
-{
-    // Todo: save to db
-    return "Thank you!";
-});
-
 mobileAPI.MapGet("/rewards", () =>
 {
     return "SecretDiscount!";
+});
+
+mobileAPI.MapPost("/survey", ([AsParameters]SurveyResults results) =>
+{
+    // Log to db
 });
 
 app.Run();
