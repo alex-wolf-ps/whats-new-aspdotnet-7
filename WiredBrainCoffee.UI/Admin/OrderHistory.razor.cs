@@ -16,7 +16,8 @@ namespace WiredBrainCoffee.UI.Admin
 
         string nameFilter = string.Empty;
 
-        IQueryable<Order> FilteredItems => items.Where(x => x.LastName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
+        IQueryable<Order> FilteredItems => items
+            .Where(x => x.LastName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
 
         protected override async Task OnInitializedAsync()
         {

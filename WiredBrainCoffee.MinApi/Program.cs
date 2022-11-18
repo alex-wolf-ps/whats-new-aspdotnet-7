@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Primitives;
+using Microsoft.OpenApi.Models;
 using System.Diagnostics;
-using System.Threading.RateLimiting;
 using WiredBrainCoffee.MinApi;
 using WiredBrainCoffee.MinApi.Services;
 using WiredBrainCoffee.MinApi.Services.Interfaces;
@@ -44,9 +43,17 @@ var mobileAPI = app.MapGroup("/api").AddEndpointFilter(async (context, next) =>
     return result;
 });
 
-app.MapGet("/orders", OrderEndPoints.GetOrders);
+app.MapGet("/orders", OrderEndPoints.GetOrders).WithOpenApi(operation =>
+{
+    operation.OperationId = "GetOrders";
+    operation.Description = "Gets all of the orders. Use with caution due to performance.";
+    operation.Summary = "Gets all the orders.";
+    operation.Tags = new List<OpenApiTag>()
+        { new OpenApiTag() { Name = "Orders" } };
+    return operation;
+});
 app.MapGet("/orderById", OrderEndPoints.GetOrderById);
-app.MapGet("/orderById", OrderEndPoints.GetOrdersByIds);
+app.MapGet("/ordersByIds", OrderEndPoints.GetOrdersByIds);
 
 app.MapPost("/contact", (Contact contact) =>
 {
@@ -64,15 +71,14 @@ app.MapPost("/upload", async (IFormFile file) =>
     await file.CopyToAsync(stream);
 });
 
-mobileAPI.MapPost("/survey", ([AsParameters]SurveyResults results) =>
-{
-    // Todo: save to db
-    return "Thank you!";
-});
-
 mobileAPI.MapGet("/rewards", () =>
 {
     return "SecretDiscount!";
+});
+
+mobileAPI.MapPost("/survey", ([AsParameters]SurveyResults results) =>
+{
+    // Log to db
 });
 
 app.Run();

@@ -21,15 +21,3 @@
         </div>
     </div>
 </div>
-
-
-@code {
-   Type selectedType = Type.GetType("WiredBrainCoffee.UI.Components.CustomerContact");
-
-    Task OnSelectedValueChanged(string value )
-    {
-        selectedType = Type.GetType($"WiredBrainCoffee.UI.Components.{value}");
-
-        return Task.CompletedTask;
-    }
-} 
