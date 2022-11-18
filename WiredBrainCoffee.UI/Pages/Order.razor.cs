@@ -32,7 +32,7 @@ namespace WiredBrainCoffee.UI.Pages
 
         public string SearchTerm { get; set; } = string.Empty;
 
-        public List<MenuItem> FilteredMenu = new();
+        public List<MenuItem> FilteredMenu = new List<MenuItem>();
 
         public void FilterMenu()
         {
