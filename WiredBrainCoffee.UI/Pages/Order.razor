@@ -10,47 +10,58 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8"> 
+            <div class="col-md-8">
                 <div>
-                    <input class="form-control" style="max-width:250px; display:inline-block" placeholder="Search..."
-                        @bind="SearchTerm" /> 
+                    <input class="form-control" @bind="SearchTerm" @bind:after="FilterMenu" 
+                        @bind:event="oninput" placeholder="Search..." />
                     <hr />
-                    @if (!string.IsNullOrEmpty(SearchTerm) && FilteredMenu.Count() == 0)
+                    @if(FilteredMenu.Count() > 0)
                     {
-                        <p>No results found.</p>
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                            @foreach (var item in FilteredMenu)
+                            {
+                                <div class="col">
+                                    <MenuListItem MenuItem="item" OnOrderCallback="(e => AddExtras(item))" />
+                                </div>
+                            }
+                        </div>
                     }
-                    @foreach (var item in FilteredMenu)
+                    else
                     {
-                        <MenuListItem MenuItem="item" OnOrderCallback="(e => AddExtras(item))" />
-                    }
+                        <Tabs FullWidth SelectedTab="@(ActiveTab != null ? ActiveTab : "coffee")" SelectedTabChanged="@OnSelectedTabChanged">
+                            <Items>
+                                <Tab Name="coffee">Coffee</Tab>
+                                <Tab Name="food">Food</Tab>
+                            </Items>
+                            <Content>
+                                <TabPanel Name="coffee">
+                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                                        @foreach (var item in MenuItems.Where(x => x.Category == "Coffee"))
+                                        {
+                                            <div class="col">
+                                                <MenuListItem MenuItem="item"
+                                                      OnDetailsCallback="(e => ViewDetails(item))"
+                                                      OnOrderCallback="(e => AddExtras(item))" />
+                                            </div>
+                                        }
+                                    </div>
+                                </TabPanel>
+                                <TabPanel Name="food">
+                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                                        @foreach (var item in MenuItems.Where(x => x.Category == "Food"))
+                                        {
+                                            <div class="col">
+                                                <MenuListItem MenuItem="item"
+                                                      OnDetailsCallback="(e => ViewDetails(item))"
+                                                      OnOrderCallback="(e => AddToOrder(item))" />
+                                            </div>
+                                        }
+                                    </div>
+                                </TabPanel>
+                            </Content>
+                        </Tabs>
+                        }
                 </div>
-                @if (string.IsNullOrEmpty(SearchTerm))
-                {
-                <Tabs FullWidth SelectedTab="@(ActiveTab != null ? ActiveTab : "coffee")" SelectedTabChanged="@OnSelectedTabChanged">
-                    <Items>
-                        <Tab Name="coffee">Coffee</Tab>
-                        <Tab Name="food">Food</Tab>
-                    </Items>
-                    <Content>
-                        <TabPanel Name="coffee">
-                            @foreach (var item in MenuItems.Where(x => x.Category == "Coffee"))
-                            {
-                                    <MenuListItem MenuItem="item" 
-                                        OnDetailsCallback="(e => ViewDetails(item))"
-                                        OnOrderCallback="(e => AddExtras(item))" />
-                            }
-                        </TabPanel>
-                        <TabPanel Name="food">
-                            @foreach (var item in MenuItems.Where(x => x.Category == "Food"))
-                            {
-                                    <MenuListItem MenuItem="item"
-                                          OnDetailsCallback="(e => ViewDetails(item))" 
-                                          OnOrderCallback="(e => AddToOrder(item))" />
-                            }
-                        </TabPanel>
-                    </Content>
-                    </Tabs>
-                }
             </div>
             <div class="col-md-4">
                 <div class="order-info">
@@ -68,8 +79,9 @@
                             <p>Gift cards or coupons? Enter them here.</p>
                             <input @bind-value="PromoCode" type="text" placeholder="Enter promo code" class="form-control" />
                         </div>
-                        <Button @onclick="PlaceOrder" Color="Color.Info" class="float-right">Place Order</Button>
-                    </div> 
+                        <br />
+                        <Button @onclick="PlaceOrder" Color="Color.Info" class="float-end">Place Order</Button>
+                    </div>
                 </div>
             </div>
         </div>

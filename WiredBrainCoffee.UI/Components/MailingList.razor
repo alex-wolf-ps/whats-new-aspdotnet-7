@@ -1,19 +1,21 @@
 ﻿<div>
     <h2 class="mailing-header">Keep in Touch</h2>
-    <div hidden="@(!HasSubscribed)">
-    <p class="mailing-subheader">Sign up for our mailing list - no spam, we promise.</p>
-            <div class="control-group form-group">
-                <input name="address" type="text" class="form-control" placeholder="Email" />
-            </div>
-            <div class="control-group form-group">
-                <button @onclick="Subscribe" class="btn btn-info">Join</button>
-            </div>
-    </div>
-    <div hidden="@(HasSubscribed)">
+    @if (!HasSubscribed)
+    {
+        <p class="mailing-subheader">Sign up for our mailing list - no spam, we promise.</p>
+        <div class="mb-3">
+            <input name="address" type="text" class="form-control" placeholder="Email" />
+        </div>
+        <div class="mb-3">
+            <button @onclick="Subscribe" class="btn btn-info float-end">Join</button>
+        </div>
+        <div class="clearfix" />
+    }
+    else
+    {
         <p>Thanks for signing up! You'll hear from us soon with a coupon code.</p>
-    </div>
+    }
 </div>
-
 
 @code {
     public bool HasSubscribed { get; set; } = false;
