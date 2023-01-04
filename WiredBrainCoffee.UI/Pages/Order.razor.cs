@@ -34,7 +34,7 @@ namespace WiredBrainCoffee.UI.Pages
 
         public List<MenuItem> FilteredMenu = new List<MenuItem>();
 
-        public void FilterMenu()
+        public Task FilterMenu()
         {
             if (!string.IsNullOrWhiteSpace(SearchTerm))
             {
@@ -45,6 +45,8 @@ namespace WiredBrainCoffee.UI.Pages
             {
                 FilteredMenu = new();
             }
+
+            return Task.CompletedTask;
         }
 
         private Task OnSelectedTabChanged(string name)
